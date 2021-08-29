@@ -1,6 +1,8 @@
+from uuid import uuid4
 from app.domain.exceptions import ErrorMessage, InsufficientPaymentException
 from app.domain.events import (
     OrderCanceled,
+    OrderCreated,
     OrderUpdated,
     PaymentConfirmed,
     PaymentPending,
@@ -20,6 +22,12 @@ class Order(Aggregate):
     sku: int
     history: List[AggregateEvent] = field(default_factory=list, init=False)
     is_active: bool = field(default=True)
+
+    @classmethod
+    def create(cls, username: str, product_id: str, sku: int):
+        return cls._create(
+            OrderCreated, id=uuid4(), username=username, product_id=product_id, sku=sku
+        )
 
     def _check_payment_amount(self, paid_amount: int):
         condition = paid_amount == self.price

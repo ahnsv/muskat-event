@@ -1,8 +1,14 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
-from eventsourcing.domain import AggregateEvent, TAggregate
+from eventsourcing.domain import AggregateCreated, AggregateEvent, TAggregate
 from enum import Enum
+
+
+class OrderCreated(AggregateCreated):
+    username: str
+    product_id: str
+    sku: int
 
 
 class PaymentConfirmed(AggregateEvent):
