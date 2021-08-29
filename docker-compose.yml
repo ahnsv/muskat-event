@@ -1,0 +1,23 @@
+version: '3.8'
+services: 
+  db: 
+    image: postgres:alpine
+    ports: 
+      - 5432:5432
+    environment: 
+      POSTGRES_DB: muskat
+      POSTGRES_USER: muskat
+      POSTGRES_PASSWORD: muskat
+
+  server:
+    build: .
+    ports: 
+      - 8001:8000
+    environment:
+      INFRASTRUCTURE_FACTORY: "eventsourcing.postgres:Factory"
+      POSTGRES_DBNAME: "muskat"
+      POSTGRES_HOST: "db"
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: "muskat"
+      POSTGRES_PASSWORD: "muskat"
+    
