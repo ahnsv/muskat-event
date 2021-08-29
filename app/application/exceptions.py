@@ -10,6 +10,9 @@ class ApplicationException(Exception):
         self.message = message
         self.code = code
 
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.code}): {self.message}"
+
 
 class DomainNotFound(ApplicationException):
     def __init__(self, message: str = ErrorMessage.DOMAIN_NOT_FOUND) -> None:

@@ -1,5 +1,10 @@
+from app.infrastructure.dependencies.container import Container
+
+
 if __name__ == "__main__":
     import uvicorn
-    from app.infrastructure.presentation.fastapi.app import app
+    from app.infrastructure.presentation.fastapi import router, app
 
-    uvicorn.run(app, host="0.0.0.0")
+    container = Container()
+    container.wire([router])
+    uvicorn.run(app.app, host="0.0.0.0")

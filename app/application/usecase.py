@@ -1,18 +1,23 @@
 from typing import Optional
+from uuid import UUID
 from app.application.exceptions import DomainNotFound
 from eventsourcing.domain import AggregateEvent
 from app.domain.aggregates import Order
-from eventsourcing.application import Application
+from eventsourcing.application import Application, AggregateNotFound
 
 
+# TODO(humphrey): DIP를 적용한다
 class OrderUsecase(Application):
     def _get_order(self, order_id) -> Order:
-        found_order: Order = self.repository.get(order_id)
-        if not found_order:
+        try:
+            found_order: Order = self.repository.get(order_id)
+            return found_order
+        except AggregateNotFound:
             raise DomainNotFound()
-        return found_order
 
-    def create_new_order(self, username: str, sku: int, product_id: str = "muskat"):
+    def create_new_order(
+        self, username: str, sku: int, product_id: str = "muskat"
+    ) -> UUID:
         new_order = Order(username=username, product_id=product_id, sku=sku)
         self.save(new_order)
         return new_order.id
