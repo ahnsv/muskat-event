@@ -1,4 +1,4 @@
-from app.domain.events import PaymentConfirmed, PaymentPending
+from app.domain.events import CancelReason, OrderCanceled, PaymentConfirmed, PaymentPending
 from app.application.usecase import OrderUsecase
 
 
@@ -28,3 +28,8 @@ def test_usecase_confirm_order_with_pending_state():
     result = usecase.handle_payment(amount=3800, order_id=fake_new_order_id)
 
     assert isinstance(result, PaymentPending) is True
+
+def test_usecase_cancel_order():
+    usecase, fake_new_order_id = create_test_usecase()
+    result = usecase.cancel_order(order_id=fake_new_order_id, reason=CancelReason.CHANGE_OF_MIND)
+    assert isinstance(result, OrderCanceled)

@@ -13,3 +13,9 @@ class OrderUsecase(Application):
         found_order: Order = self.repository.get(order_id)
         found_order.confirm_payment(amount=amount)
         return found_order.history[-1]
+
+    def cancel_order(self, order_id, reason) -> AggregateEvent:
+        found_order: Order = self.repository.get(order_id)
+        found_order.cancel(reason=reason)
+        assert found_order.is_active is False
+        return found_order.history[-1]

@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from eventsourcing.domain import AggregateEvent
+from enum import Enum
 
 
 class PaymentConfirmed(AggregateEvent):
@@ -19,3 +20,15 @@ class PaymentPending(AggregateEvent):
 
     def apply(self, aggregate) -> None:
         aggregate.history += (self,)
+
+
+class CancelReason(str, Enum):
+    CHANGE_OF_MIND = "단순 변심"
+
+
+class OrderCanceled(AggregateEvent):
+    reason: CancelReason
+
+    def apply(self, aggregate) -> None:
+        aggregate.history += (self,)
+        aggregate.is_active = False
