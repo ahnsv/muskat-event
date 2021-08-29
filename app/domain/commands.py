@@ -14,7 +14,7 @@ class CreateOrder(BaseCommand):
 
 class HandlePayment(BaseCommand):
     amount: int
-    order_id: str
+    order_id: UUID
 
 
 class CancelOrder(BaseCommand):
