@@ -1,12 +1,13 @@
 from app.domain.exceptions import ErrorMessage, InsufficientPaymentException
 from app.domain.events import (
     OrderCanceled,
+    OrderUpdated,
     PaymentConfirmed,
     PaymentPending,
     PaymentReceived,
 )
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 from eventsourcing.domain import Aggregate, AggregateEvent, event
 
 BASE_PRICE = 38000
@@ -45,3 +46,6 @@ class Order(Aggregate):
 
     def cancel(self, reason: str):
         self.trigger_event(OrderCanceled, reason=reason)
+
+    def update(self, sku: int, username: Optional[str] = None):
+        self.trigger_event(OrderUpdated, sku=sku, username=username)

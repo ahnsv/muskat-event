@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from eventsourcing.domain import AggregateEvent
+from typing import Optional
+from eventsourcing.domain import AggregateEvent, TAggregate
 from enum import Enum
 
 
@@ -32,3 +33,14 @@ class OrderCanceled(AggregateEvent):
     def apply(self, aggregate) -> None:
         aggregate.history += (self,)
         aggregate.is_active = False
+
+
+class OrderUpdated(AggregateEvent):
+    sku: int
+    username: Optional[str] = None
+
+    def apply(self, aggregate: TAggregate) -> None:
+        aggregate.sku = self.sku
+        if self.username:
+            aggregate.username = self.username
+        aggregate.history += (self,)
