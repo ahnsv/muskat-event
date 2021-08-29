@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 from app.infrastructure.dependencies.container import Container
 from app.domain import commands as cmd
@@ -28,9 +29,11 @@ def create_order(
 @router.get("/{order_id}", response_model=OrderOutput)
 @inject
 def get_order(
-    order_id: UUID, usecase: OrderUsecase = Depends(Provide[Container.usecase])
+    order_id: UUID,
+    version: Optional[int] = None,
+    usecase: OrderUsecase = Depends(Provide[Container.usecase]),
 ):
-    return usecase._get_order(order_id)
+    return usecase.get_order(order_id, version_id=version)
 
 
 @router.delete("/{order_id}", status_code=http.HTTPStatus.ACCEPTED)
